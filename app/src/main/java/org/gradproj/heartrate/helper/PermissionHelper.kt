@@ -10,7 +10,7 @@ import com.gun0912.tedpermission.TedPermission
 class PermissionHelper(val activity: Activity) : TedPermission() {
     var permissionCheckable : Boolean = false
 
-    fun constructor(){
+    init{
         val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
                 Toast.makeText(
@@ -32,5 +32,6 @@ class PermissionHelper(val activity: Activity) : TedPermission() {
             .setDeniedMessage("권한을 허용해야 모든 기능을 사용할 수 있습니다.")
             .setPermissions(Manifest.permission.CAMERA)
             .check()
+
     }
 }

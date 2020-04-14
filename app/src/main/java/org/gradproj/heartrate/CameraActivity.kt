@@ -6,17 +6,22 @@ import android.util.Log
 import android.view.TextureView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.camera2.Camera2Config
-import androidx.camera.core.AspectRatio
-import androidx.camera.core.CameraXConfig
-import androidx.camera.core.Preview
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import org.gradproj.heartrate.helper.PermissionHelper
 import java.lang.Math.*
+import java.nio.ByteBuffer
+import java.util.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
-class CameraActivity : AppCompatActivity(), LifecycleOwner, CameraXConfig.Provider{
+typealias LumaListener = (luma:Double) -> Unit
+
+class CameraActivity : AppCompatActivity(), LifecycleOwner{
 
     val TAG : String = "CAMERA_ACTIVITY"
     val permissionHelper : PermissionHelper = PermissionHelper(this)
@@ -27,10 +32,20 @@ class CameraActivity : AppCompatActivity(), LifecycleOwner, CameraXConfig.Provid
     private val executor = Executors.newSingleThreadExecutor()
     private lateinit var viewFinder : TextureView
 
+    private var camera: Camera? = null
+    private var displayId : Int = -1
+    private var preview :Preview? = null
+    private var imageCapture: ImageCapture? = null
+    private var imageAnalyzer: ImageAnalysis? = null
+    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+
+    private lateinit var cameraExecutor : ExecutorService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        cameraExecutor = Executors.newSingleThreadExecutor()
         viewFinder = findViewById(R.id.textureView)
         viewFinder.post{
             //Build UI control
@@ -38,17 +53,16 @@ class CameraActivity : AppCompatActivity(), LifecycleOwner, CameraXConfig.Provid
         }
 
         if (permissionHelper.permissionCheckable){
-            viewFinder.post{startCamera()}
+            Toast.makeText(this, "권한 허용 확인", Toast.LENGTH_SHORT).show()
         } else{
             Toast.makeText(this, "권한 허가 후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
             finish()
         }
+    }
 
-        viewFinder.addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 ->
-            updateTransform()
-        }
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+//        cameraExe
     }
 
     private fun flashControl(){
@@ -66,6 +80,46 @@ class CameraActivity : AppCompatActivity(), LifecycleOwner, CameraXConfig.Provid
         Log.d(TAG, "${metrics.widthPixels} x ${metrics.heightPixels}" )
 
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
+
+        // initial rotation
+        val rotation = viewFinder.display.rotation
+
+        val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(applicationContext)
+        cameraProviderFuture.addListener(Runnable {
+            val cameraProvider : ProcessCameraProvider = cameraProviderFuture.get()
+
+            // preview
+            preview = Preview.Builder()
+                .setTargetAspectRatio(screenAspectRatio)
+                .setTargetRotation(rotation)
+                .build()
+
+            imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setTargetAspectRatio(screenAspectRatio)
+                .setTargetRotation(rotation)
+                .build()
+
+            imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetAspectRatio(screenAspectRatio)
+                .setTargetRotation(rotation)
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer{luma ->
+                        //Todo 코드 추가하기
+                    })
+                }
+            cameraProvider.unbindAll()
+
+            try {
+                camera = cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageCapture,imageAnalyzer)
+//                preview?.setSurfaceProvider { viewFinder.create }
+            }catch (e:Exception){
+                Log.e(TAG, "Use case binding failed",e)
+            }
+        }, ContextCompat.getMainExecutor(applicationContext))
     }
 
     private fun aspectRatio(width: Int, height: Int): Int {
@@ -76,18 +130,55 @@ class CameraActivity : AppCompatActivity(), LifecycleOwner, CameraXConfig.Provid
         return AspectRatio.RATIO_16_9
     }
 
-    // initializer cameraX
-    override fun getCameraXConfig(): CameraXConfig {
-        return Camera2Config.defaultConfig()
-    }
+    private class LuminosityAnalyzer(listener: LumaListener? = null) : ImageAnalysis.Analyzer{
+        private val frameRateWindow = 8;
+        private val frameTimestamps = ArrayDeque<Long>(5)
+        private val listeners = ArrayList<LumaListener>().apply {
+            listener?.let { add(it) }
+        }
+        private var lastAnalyzedTimestamp = 0L
+        var framesPerSecond: Double = -1.0
+        private set
 
-    // camera open
-    private fun startCamera(){
+        fun onFrameAnalyzed(listener: LumaListener) = listeners.add(listener)
 
-        val preview = Preview.Builder().build()
+        private fun ByteBuffer.toByteArray(): ByteArray{
+            rewind()
+            val data = ByteArray(remaining())
+            get(data)
+            return data
+        }
 
-    }
-    private fun updateTransform() {
+        override fun analyze(image: ImageProxy) {
+            if (listeners.isEmpty()){
+                image.close()
+                return
+            }
 
+            // keep track of frames analyzed
+            val currentTime = System.currentTimeMillis()
+            frameTimestamps.push(currentTime)
+
+            // Compute the FPS using a moving average
+            while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
+            val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
+            val timestampLast = frameTimestamps.peekLast() ?: currentTime
+            framesPerSecond = 1.0 / (timestampFirst - timestampLast) /
+                    frameTimestamps.size.coerceAtLeast(1).toDouble() * 1000.0
+
+            lastAnalyzedTimestamp = frameTimestamps.first
+
+            val buffer = image.planes[0].buffer
+
+            // image from callback object
+            val data = buffer.toByteArray()
+            val pixels = data.map { it.toInt() and 0XFF }
+
+            // avg luminance for the image
+            val luma = pixels.average()
+            listeners.forEach { it(luma) }
+
+            image.close()
+        }
     }
 }

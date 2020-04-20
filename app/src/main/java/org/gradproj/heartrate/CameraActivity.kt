@@ -51,7 +51,7 @@ class CameraActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.layout_camera_preview)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
         viewFinder = findViewById(R.id.textureView)

@@ -100,9 +100,10 @@ class CameraActivity : AppCompatActivity(){
     }
 
     private fun flashControl(){
-        // flash light control
-//        val flashEnable : Boolean = camera.cameraInfo.hasFlashUnit()
-//        val flashMode : Boolean = CameraInfo.IMPLEMENTATION_TYPE_CAMERA2.
+        val flashEnable : Boolean? = camera?.cameraInfo?.hasFlashUnit()
+        if (flashEnable!!){
+            preview
+        }
 //        if(flashMode == Im) imageCapture.flashMode = ImageCapture.FLASH_MODE_OFF
 //        else imageCapture.flashMode = ImageCapture.FLASH_MODE_ON
     }
@@ -149,6 +150,7 @@ class CameraActivity : AppCompatActivity(){
             try {
                 camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture,imageAnalyzer)
+
 //                preview?.setSurfaceProvider { viewFinder.create }
             }catch (e:Exception){
                 Log.e(TAG, "Use case binding failed",e)

@@ -4,14 +4,21 @@ import android.Manifest
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import org.gradproj.heartrate.fragment.CameraFragment
 
 
 class CameraActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_camera_preview)
+        setContentView(R.layout.activity_main)
+
+        if(savedInstanceState == null){
+            changeFragment(CameraFragment())
+        }
 
         val permissionListener: PermissionListener =
             object : PermissionListener {
@@ -28,5 +35,11 @@ class CameraActivity : AppCompatActivity(){
             .setDeniedMessage("권한 허용 거부시 기능을 정상적으로 이용할 수 없습니다.")
             .setPermissions(Manifest.permission.CAMERA)
             .check()
+    }
+
+    fun changeFragment(cameraFragment: Fragment) {
+        var fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.main_content, cameraFragment)
+            .commit()
     }
 }

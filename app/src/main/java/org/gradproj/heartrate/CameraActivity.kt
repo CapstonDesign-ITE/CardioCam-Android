@@ -37,8 +37,8 @@ class CameraActivity : AppCompatActivity(){
             .check()
     }
 
-    fun changeFragment(cameraFragment: Fragment) {
-        var fragmentTransaction = supportFragmentManager.beginTransaction()
+    private fun changeFragment(cameraFragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.main_content, cameraFragment)
             .commit()
     }

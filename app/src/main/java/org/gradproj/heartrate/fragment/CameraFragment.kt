@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -18,14 +19,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
 import java.io.File
-import java.lang.Math.*
+import java.lang.Math.max
+import java.lang.Math.min
 import java.nio.ByteBuffer
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.abs
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -44,6 +47,9 @@ class CameraFragment : Fragment() {
     private var imageAnalyzer : ImageAnalysis? = null
     private var camera : Camera? = null
 
+    private lateinit var cameraControl : CameraControl
+    private lateinit var cameraInfo : CameraInfo
+
     private lateinit var cameraExecutor : ExecutorService
 
     private val displayManager by lazy {
@@ -58,8 +64,15 @@ class CameraFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.layout_camera_preview, container, false)
+
+        val rootView = inflater.inflate(R.layout.layout_camera_preview, container, false)
+
+        val btnTorchOn = rootView.findViewById<Button>(R.id.btn_start_video)
+        btnTorchOn.setOnClickListener {
+            toggleTorch()
+        }
+
+        return rootView
     }
 
     private val displayListener = object : DisplayManager.DisplayListener{
@@ -99,14 +112,9 @@ class CameraFragment : Fragment() {
         displayManager.registerDisplayListener(displayListener, null)
 
         viewFinder.post {
-
-            // Keep track of the display in which this view is attached
             displayId = viewFinder.display.displayId
 
-            // Build UI controls
             updateCameraUi()
-
-            // Bind use cases
             bindCameraUseCases()
         }
     }
@@ -131,39 +139,25 @@ class CameraFragment : Fragment() {
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            // Preview
             preview = Preview.Builder()
-                // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation
                 .setTargetRotation(rotation)
                 .build()
 
-            // ImageCapture
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 // We request aspect ratio but no resolution to match preview config, but letting
                 // CameraX optimize for whatever specific resolution best fits our use cases
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation, we will have to call this again if rotation changes
-                // during the lifecycle of this use case
                 .setTargetRotation(rotation)
                 .build()
 
-            // ImageAnalysis
             imageAnalyzer = ImageAnalysis.Builder()
-                // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation, we will have to call this again if rotation changes
-                // during the lifecycle of this use case
                 .setTargetRotation(rotation)
                 .build()
-                // The analyzer can then be assigned to the instance
                 .also {
                     it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        // Values returned from our analyzer are passed to the attached listener
-                        // We log image analysis results here - you should do something useful
-                        // instead!
                         Log.d(TAG, "Average luminosity: $luma")
                     })
                 }
@@ -200,7 +194,6 @@ class CameraFragment : Fragment() {
 
     private class LuminosityAnalyzer(listener: LumaListener? = null) : ImageAnalysis.Analyzer {
         override fun analyze(image: ImageProxy) {
-            // If there are no listeners attached, we don't need to perform analysis
             if (listeners.isEmpty()) {
                 image.close()
                 return
@@ -210,22 +203,16 @@ class CameraFragment : Fragment() {
             val currentTime = System.currentTimeMillis()
             frameTimestamps.push(currentTime)
 
-            // Compute the FPS using a moving average
             while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
             val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
             val timestampLast = frameTimestamps.peekLast() ?: currentTime
             framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
                     frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
 
-            // Analysis could take an arbitrarily long amount of time
-            // Since we are running in a different thread, it won't stall other use cases
 
             lastAnalyzedTimestamp = frameTimestamps.first
 
-            // Since format in ImageAnalysis is YUV, image.planes[0] contains the luminance plane
             val buffer = image.planes[0].buffer
-
-            // Extract image data from callback object
             val data = buffer.toByteArray()
 
             // Convert the data into an array of pixel values ranging 0-255
@@ -234,7 +221,6 @@ class CameraFragment : Fragment() {
             // Compute average luminance for the image
             val luma = pixels.average()
 
-            // Call all listeners with new value
             listeners.forEach { it(luma) }
 
             image.close()
@@ -252,15 +238,27 @@ class CameraFragment : Fragment() {
          */
         fun onFrameAnalyzed(listener: LumaListener) = listeners.add(listener)
 
-        /**
-         * Helper extension function used to extract a byte array from an image plane buffer
-         */
         private fun ByteBuffer.toByteArray(): ByteArray {
             rewind()    // Rewind the buffer to zero
             val data = ByteArray(remaining())
             get(data)   // Copy the buffer into a byte array
             return data // Return the byte array
 
+        }
+    }
+
+    private fun toggleTorch(){
+        cameraInfo = camera?.cameraInfo!!
+        cameraControl = camera?.cameraControl!!
+
+        if(cameraInfo.torchState.value == TorchState.ON){
+            cameraControl.enableTorch(false)
+            Toast.makeText(requireContext(), "심박 데이터 추출이 완료되었습니다",Toast.LENGTH_SHORT)
+                .show()
+        }else{
+            cameraControl.enableTorch(true)
+            Toast.makeText(requireContext(), "심박 데이터 추출이 완료될 때까지\n손을 떼지 말아주세요",Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -271,9 +269,8 @@ class CameraFragment : Fragment() {
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
 
-        /** Helper function used to create a timestamped file */
-        private fun createFile(baseFolder: File, format: String, extension: String) =
-            File(baseFolder, SimpleDateFormat(format, Locale.KOREA)
-                .format(System.currentTimeMillis()) + extension)
+//        private fun createFile(baseFolder: File, format: String, extension: String) =
+//            File(baseFolder, SimpleDateFormat(format, Locale.KOREA)
+//                .format(System.currentTimeMillis()) + extension)
     }
 }

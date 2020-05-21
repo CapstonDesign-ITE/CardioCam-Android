@@ -95,8 +95,11 @@ class CameraFragment : Fragment() {
         super.onDestroy()
 
         cameraExecutor.shutdown()
-
         displayManager.unregisterDisplayListener(displayListener)
+
+        if(cameraInfo.torchState.value == TorchState.ON){
+            cameraControl.enableTorch(false)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -264,13 +267,7 @@ class CameraFragment : Fragment() {
 
     companion object{
         private const val TAG = "CameraFragment"
-        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val PHOTO_EXTENSION = ".jpg"
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
-
-//        private fun createFile(baseFolder: File, format: String, extension: String) =
-//            File(baseFolder, SimpleDateFormat(format, Locale.KOREA)
-//                .format(System.currentTimeMillis()) + extension)
     }
 }

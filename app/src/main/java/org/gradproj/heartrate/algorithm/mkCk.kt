@@ -8,7 +8,7 @@ class mkCk {
         mkCk(k)
     }
     fun mkCk(k: Int) {
-        for
+
         this.ck(t)
     }
     fun mk(k: Int){

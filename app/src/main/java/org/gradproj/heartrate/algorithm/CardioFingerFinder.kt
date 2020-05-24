@@ -15,9 +15,12 @@ var maxR : Double = 0.0
 var minR : Double = 0.0
 var hI : Array<Double?> = Array (30){null}
 var s : Double= 0.0
+var cardioCycle :Int = 0
+var diffK : Double = 0
 
-var x : Int = 1280
-var y : Int = 720
+
+val x : Int = 1280
+val y : Int = 720
 
 fun main() {
     var pr : Pr = Pr()

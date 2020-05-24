@@ -12,7 +12,7 @@ class minFinder (t : Int){
         fun comp()
         { for(i in 0..t) {
             minSub = r[i-1]!!
-            if (minR <= minSub) {
+            if (minR < minSub) {
                 minR = minSub
                 tMin = i
             }

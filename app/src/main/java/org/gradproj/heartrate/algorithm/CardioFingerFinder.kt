@@ -15,7 +15,6 @@ var maxR : Double = 0.0
 var minR : Double = 0.0
 var hI : Array<Double?> = Array (30){null}
 var s : Double= 0.0
-var cardioCycle :Int = 0
 var k : Int = 0
 
 

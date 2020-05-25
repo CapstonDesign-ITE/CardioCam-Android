@@ -7,15 +7,23 @@ class mkCk {
         ck(t)
         mkCk(k)
     }
-    fun mkCk(k: Int) {
+    fun mkCk(i: Int) : Int {
+        if(diffR[i]!! > 15){
 
-        this.ck(t)
+          return this.ck(t)}
+
+        else return 0
+
     }
-    fun mk(k: Int){
-
+    fun mk(i: Int): Int {
+        if(diffR[i]!! > 15) {
+            return 1
+        }
+        else return 0
     }
-    fun ck(t: Int){
+    fun ck(t: Int): Int {
 
+        return camera.flashlihgt
 
     }
 }

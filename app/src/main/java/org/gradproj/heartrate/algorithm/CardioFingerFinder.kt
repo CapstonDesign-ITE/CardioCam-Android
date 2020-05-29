@@ -3,17 +3,17 @@ package org.gradproj.heartrate.algorithm
 import android.graphics.Camera
 
 //메인
-
+val size : Int = 30
 var t : Int = 0
 var tMin: Int = 0
 var tMax: Int = 0
-var r : Array<Double?> = Array(30) { null}
-var g : Array<Double?> = Array(30) { null}
-var b : Array<Double?> = Array(30) { null}
-var diffR : Array<Double?> =  Array(30) { null}
+var r : Array<Double?> = Array(size) { null}
+var g : Array<Double?> = Array(size) { null}
+var b : Array<Double?> = Array(size) { null}
+var diffR : Array<Double?> =  Array(size) { null}
 var maxR : Double = 0.0
 var minR : Double = 0.0
-var hI : Array<Double?> = Array (30){null}
+var hI : Array<Double?> = Array (size){null}
 var s : Double= 0.0
 var k : Int = 0
 

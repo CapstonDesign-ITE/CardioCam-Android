@@ -19,7 +19,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
 import java.io.File
 import java.lang.Math.max
@@ -33,7 +32,6 @@ import kotlin.math.abs
 typealias LumaListener = (luma: Double) -> Unit
 
 class CameraFragment : Fragment() {
-
 
     private lateinit var container : ConstraintLayout
     private lateinit var viewFinder : PreviewView
@@ -191,7 +189,6 @@ class CameraFragment : Fragment() {
         }
 
         val controls = View.inflate(requireContext(), R.layout.layout_camera_preview, container)
-        //Todo
         controls.findViewById<Button>(R.id.btn_start_video)
     }
 

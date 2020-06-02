@@ -16,10 +16,9 @@ class mkCk {
 
     }
     fun mk(i: Int): Int {
-        if(diffR[i]!! > 15) {
-            return 1
-        }
-        else return 0
+        return if(diffR[i]!! > 15) {
+            1
+        } else 0
     }
     fun ck(t: Int): Int {
 

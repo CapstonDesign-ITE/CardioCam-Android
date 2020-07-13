@@ -1,5 +1,6 @@
 package org.gradproj.heartrate.algorithm
 
+// 피그-밸리 알고리즘에서 벨리를 먼저 구하고 도출한 프레임 값을 이용하여 수축, 이완기 최대값을 각각 구해야 함
 class peak {
     var xi :Array<Double?> = Array(size){null}
     init{
@@ -65,7 +66,7 @@ class peak {
         }
         else return false
     }
-}
+}// 실제 피크가 나오는 알고리즘
 
 
 
@@ -74,9 +75,11 @@ class valley {
     init{
         valleyFinder(i1,i2)
         s1()
+        s1Finder(this.s1())
         s2()
         s3()
     }
+
     fun xiFinder(){
 
     }
@@ -87,19 +90,32 @@ class valley {
         for (i in i1-1..i1+i2-1){
             if (min1 != null) {
                 if (min1 > diffR[i]!!){
-                    min1 = diffR[i]
+                    if (diffR[i]!! > 0)
+                    {min1 = diffR[i]}
                 }
             }
         }
         for (i in i1-i2-1..i1-1){
             if (min2 != null) {
                 if (min2 > diffR[i]!!){
-                    min2 = diffR[i]
+                    if (diffR[i]!! > 0)
+                    {min2 = diffR[i]}
                 }
             }
         }
         return (min1!! + min2!!) / 2
     }
+
+    fun s1Finder(i1: Double): Double {
+            var here : Double = i1
+              for (i in 0..size-1){
+                  if (diffR[i]!! <= here ){
+                      standardValley = i
+                      here = diffR[i]!! }
+
+              }
+            return here
+    } // 실제 밸리를 구하는 알고리즘
 
     fun s2(i1: Int, i2 : Int): Double{
         var sum1 : Double? = null

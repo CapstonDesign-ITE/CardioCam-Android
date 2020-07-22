@@ -30,6 +30,6 @@ class diff() {
                hI[i - 1] = Aver.aver1()* Aver.aver1() + Aver.aver2()
            }
        }
-    }
+    }//단순계산을 위한 기는ㅇ
 
 }

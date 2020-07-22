@@ -24,6 +24,6 @@ class SDF {
 
     fun DN(): Double {
 
-        return  Valley.s1Finder(Valley.s1(0,size-1))
+        return  Valley.valleyFinder(Valley.s1(0,size-1))
     }
 }

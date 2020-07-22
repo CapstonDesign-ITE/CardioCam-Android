@@ -114,7 +114,7 @@ class valley(i1:Int, i2: Int,i3:Double) {
         return (min1!! + min2!!) / 2
     }
 
-    fun s1Finder(i1: Double): Double {
+    fun valleyFinder(i1: Double): Double {
         var here : Double = i1
         for (i in 0..size-1){
             if (diffR[i]!! <= here ){
@@ -122,8 +122,18 @@ class valley(i1:Int, i2: Int,i3:Double) {
                 here = diffR[i]!! }
 
         }
+        
+        if(here == i1){
+            here = diffR[0]!!
+            for (i in 0..size-1){
+                if(diffR[i]!! <= here){
+                    standardValley = i
+                    here = diffR[i]!!
+                }
+            }
+        }
         return here
-    } // 실제 밸리를 구하는 알고리즘
+    } // 실제 밸리를 구하는 알고리즘, 위 공식으로 구하면 근사치가 나옴
 
     fun s2(i1: Int, i2 : Int): Double{
         var sum1 : Double? = null

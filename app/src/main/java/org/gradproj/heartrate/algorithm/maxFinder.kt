@@ -5,15 +5,17 @@ class maxFinder (t: Int) {
     var maxSub : Double= 0.0
     
     init{
-        comp()
+         comp()
+
     }
         fun comp(){
             for(i in 0..t) {
                 maxSub =r[i-1]!!
-            if (maxR <= maxSub) {
+            if (maxR < maxSub) {
                 maxR = maxSub
                 tMax = i
             }
+
             }
     }
 

@@ -19,6 +19,7 @@ import java.nio.ByteBuffer
  * analysis use case at the default analyzer resolution, which is 30 FPS with
  * 640x480 on a Pixel 3 XL device.
  */
+
 class YuvToRgbConverter(context: Context) {
     private val rs = RenderScript.create(context)
     private val scriptYuvToRgb = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs))

@@ -36,7 +36,6 @@ class CameraFragment : Fragment() {
 
     private lateinit var container : ConstraintLayout
     private lateinit var viewFinder : PreviewView
-    private lateinit var outputDirectory : File
     private lateinit var broadcastManager: LocalBroadcastManager
 
     private var displayId : Int = -1
@@ -129,6 +128,7 @@ class CameraFragment : Fragment() {
     private fun bindCameraUseCases(){
         val metrics = DisplayMetrics().also{
             viewFinder.display.getRealMetrics(it)
+
         }
 
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
@@ -207,9 +207,10 @@ class CameraFragment : Fragment() {
             while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
             val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
             val timestampLast = frameTimestamps.peekLast() ?: currentTime
+
+            // 30fps
             framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
                     frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
-
 
             lastAnalyzedTimestamp = frameTimestamps.first
 
@@ -221,6 +222,8 @@ class CameraFragment : Fragment() {
 
             // Compute average luminance for the image
             val luma = pixels.average()
+            val redLuma = pixels.size
+            Log.d("luminous analyzer fps",framesPerSecond.toString() + redLuma)
 
             listeners.forEach { it(luma) }
 

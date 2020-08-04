@@ -7,6 +7,7 @@ import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
 import java.io.File
 import java.lang.Math.max
@@ -34,10 +34,8 @@ typealias LumaListener = (luma: Double) -> Unit
 
 class CameraFragment : Fragment() {
 
-
     private lateinit var container : ConstraintLayout
     private lateinit var viewFinder : PreviewView
-    private lateinit var outputDirectory : File
     private lateinit var broadcastManager: LocalBroadcastManager
 
     private var displayId : Int = -1
@@ -130,6 +128,7 @@ class CameraFragment : Fragment() {
     private fun bindCameraUseCases(){
         val metrics = DisplayMetrics().also{
             viewFinder.display.getRealMetrics(it)
+
         }
 
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
@@ -191,7 +190,6 @@ class CameraFragment : Fragment() {
         }
 
         val controls = View.inflate(requireContext(), R.layout.layout_camera_preview, container)
-        //Todo
         controls.findViewById<Button>(R.id.btn_start_video)
     }
 
@@ -209,9 +207,10 @@ class CameraFragment : Fragment() {
             while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
             val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
             val timestampLast = frameTimestamps.peekLast() ?: currentTime
+
+            // 30fps
             framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
                     frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
-
 
             lastAnalyzedTimestamp = frameTimestamps.first
 
@@ -223,6 +222,8 @@ class CameraFragment : Fragment() {
 
             // Compute average luminance for the image
             val luma = pixels.average()
+            val redLuma = pixels.size
+            Log.d("luminous analyzer fps",framesPerSecond.toString() + redLuma)
 
             listeners.forEach { it(luma) }
 

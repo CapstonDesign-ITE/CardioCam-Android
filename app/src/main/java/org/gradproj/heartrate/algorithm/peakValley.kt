@@ -1,7 +1,7 @@
 package org.gradproj.heartrate.algorithm
 
 // 피그-밸리 알고리즘에서 벨리를 먼저 구하고 도출한 프레임 값을 이용하여 수축, 이완기 최대값을 각각 구해야 함
-class peak(i1:Int, i2: Int) {
+class peakValley (i1:Int, i2: Int) {
     var xi :Array<Double?> = Array(size){null}
     init{
          peakFinder(i1,i2)

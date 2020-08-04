@@ -22,49 +22,49 @@ var standardValley : Int = 0 // 수축- 확장 최대를 구하기 위한 기준
 val x : Int = 1280
 val y : Int = 720
 
-fun main() {
+//fun main() {
     var pr : Pr = Pr()
     var sPre : Double = 0.0
     var FLPre : Double = 0.0
     var ISO :Int =550
-
-    var AssessmentScore : assessmentScore = assessmentScore()
-    var camera : Camera = Camera()
-
-    var startOrNot :Boolean = pr.finger()
-if (startOrNot) {
-    while (s <= 0.85) {
-
-        sPre= s
-        var FL :Double = camera.flashlight
-            assessmentScore()
-            var Feedback = s - sPre
-
-            if (FL-FLPre > 0.85)
-            {
-            FLPre = FL
-            var OffsetFL:Double = Feedback * 0.05
-            FL = FLPre + OffsetFL
-            camera.flashlight = FL
-        }
-        else{
-            var OffsetISO : Double = Feedback * 5
-            ISO = ISO + OffsetISO
-            camera.ISO = ISO
-        }
-
-    }
-    // 임계값이 0.85를 넘으면 프로그램 실행
-    if (s>=0.85){
-
-    }
-
-
- }
-
-}
-/**
- * 알고리즘에 카메라에 대한 클래스를 사용하는 것 같은데 내가 구현하는 부분에 안나와있어서
- * 우선 논문에 나온 그대로 작성함
- */
-
+//
+//    var AssessmentScore : assessmentScore = assessmentScore()
+//    var camera : Camera = Camera()
+//
+//    var startOrNot :Boolean = pr.finger()
+//if (startOrNot) {
+//    while (s <= 0.85) {
+//
+//        sPre= s
+//        var FL :Double = camera.flashlight
+//            assessmentScore()
+//            var Feedback = s - sPre
+//
+//            if (FL-FLPre > 0.85)
+//            {
+//            FLPre = FL
+//            var OffsetFL:Double = Feedback * 0.05
+//            FL = FLPre + OffsetFL
+//            camera.flashlight = FL
+//        }
+//        else{
+//            var OffsetISO : Double = Feedback * 5
+//            ISO = ISO + OffsetISO
+//            camera.ISO = ISO
+//        }
+//
+//    }
+//    // 임계값이 0.85를 넘으면 프로그램 실행
+//    if (s>=0.85){
+//
+//    }
+//
+//
+// }
+//
+//}
+///**
+// * 알고리즘에 카메라에 대한 클래스를 사용하는 것 같은데 내가 구현하는 부분에 안나와있어서
+// * 우선 논문에 나온 그대로 작성함
+// */
+//

@@ -18,7 +18,6 @@ class diff() {
             diffR[i]= maxR- minR
 
             cal()
-
         }
 
       }

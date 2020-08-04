@@ -6,9 +6,7 @@ package org.gradproj.heartrate.algorithm
  * 분포계산만을 위한 클래스임
  */
 
-class aver() {
-
-
+class aver {
     init {
         aver1()
         aver2()

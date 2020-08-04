@@ -6,19 +6,19 @@ class diffK {
     var mkSum : Int = 0
     var mkCkSum : Double = 0.0
     init{
-        mkFinder()
-        mkCkFinder()
+//        mkFinder()
+//        mkCkFinder()
     }
-    fun mkFinder(): Int {
-        for (i in 0..29){
-            mkSum += MkCk.mk(i)
-        }
-        return mkSum
-    }
-    fun mkCkFinder() :Double {
-        for (i in 0..29){
-            mkCkSum += MkCk.mkCk(i)
-        }
-        return mkCkSum
-    }
+//    fun mkFinder(): Int {
+//        for (i in 0..29){
+//            mkSum += MkCk.mk(i)
+//        }
+//        return mkSum
+//    }
+//    fun mkCkFinder() :Double {
+//        for (i in 0..29){
+//            mkCkSum += MkCk.mkCk(i)
+//        }
+//        return mkCkSum
+//    }
 }

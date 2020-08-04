@@ -53,8 +53,9 @@ if (startOrNot) {
             camera.ISO = ISO
         }
 
-
-
+    }
+    // 임계값이 0.85를 넘으면 프로그램 실행
+    if (s>=0.85){
 
     }
 

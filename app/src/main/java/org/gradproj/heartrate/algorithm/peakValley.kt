@@ -81,16 +81,16 @@ class peak(i1:Int, i2: Int) {
 class valley(i1:Int, i2: Int,i3:Double) {
     var xi :Array<Double?> = Array(size){null}
         init{
-        valleyFinder(i1,i2)
+        valleyFinder(i1,i2) // 해당 구간에 지역벨리가 있는지 찾는 함수
         s1(i1,i2)
-        s1Finder(i3)
+        valleyFinder(i3) // 근사치로 구한 벨리를 기준으로 실제 벨리를 구한다.
         s2(i1,i2)
         s3(i1,i2)
     }
 
     fun xiFinder(){
 
-    }
+    } // 비워둔것 안씀.
 
     fun s1(i1: Int, i2 : Int): Double {
         var min1 : Double? = diffR[i1-1]
@@ -122,7 +122,7 @@ class valley(i1:Int, i2: Int,i3:Double) {
                 here = diffR[i]!! }
 
         }
-        
+
         if(here == i1){
             here = diffR[0]!!
             for (i in 0..size-1){
@@ -161,11 +161,12 @@ class valley(i1:Int, i2: Int,i3:Double) {
         }
         return ( (diffR[i1-1]!! - sum1!!/i2) + (diffR[i1-1]!! - sum2!!/i2) )/2
     }
+
     fun valleyFinder(i1: Int, i2: Int) : Boolean {
         if (diffR[i1]!! < this.s1(i1,i2))
         {
             return true
         }
         else return false
-    }
+    } // 해당 지점에 벨리가 있는지 찾아내는 함수
 }

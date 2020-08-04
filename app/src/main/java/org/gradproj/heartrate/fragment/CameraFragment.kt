@@ -7,7 +7,6 @@ import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.gradproj.heartrate.R
-import java.io.File
 import java.lang.Math.max
 import java.lang.Math.min
 import java.nio.ByteBuffer

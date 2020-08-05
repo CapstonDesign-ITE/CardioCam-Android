@@ -1,5 +1,6 @@
 package org.gradproj.heartrate.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
@@ -19,7 +20,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import org.gradproj.heartrate.R
+import org.gradproj.heartrate.helper.permissionListenHelper
 import java.lang.Math.max
 import java.lang.Math.min
 import java.nio.ByteBuffer
@@ -31,7 +35,6 @@ import kotlin.math.abs
 typealias LumaListener = (luma: Double) -> Unit
 
 class CameraFragment : Fragment() {
-
     private lateinit var container : ConstraintLayout
     private lateinit var viewFinder : PreviewView
     private lateinit var broadcastManager: LocalBroadcastManager
@@ -54,6 +57,25 @@ class CameraFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//
+//        val permissionListener: PermissionListener =
+//            object : PermissionListener {
+//                override fun onPermissionGranted() {
+//                    Toast.makeText(context, "권한 허용", Toast.LENGTH_SHORT).show()
+////                    cameraGranted = true
+//                }
+//                override fun onPermissionDenied(deniedPermissions: List<String?>) {
+//                    Toast.makeText(
+//                        context, "권한 거부 되었습니다.", Toast.LENGTH_SHORT).show()
+////                    cameraGranted = false
+//                }
+//            }
+//
+//        TedPermission.with(context)
+//            .setPermissionListener(permissionListener)
+//            .setDeniedMessage("권한 허용 거부시 기능을 정상적으로 이용할 수 없습니다.")
+//            .setPermissions(Manifest.permission.CAMERA)
+//            .check()
     }
 
     override fun onCreateView(
@@ -98,7 +120,7 @@ class CameraFragment : Fragment() {
         }
     }
 
-    @SuppressLint("MissingPermission")
+//    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -126,7 +148,6 @@ class CameraFragment : Fragment() {
     private fun bindCameraUseCases(){
         val metrics = DisplayMetrics().also{
             viewFinder.display.getRealMetrics(it)
-
         }
 
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)

@@ -11,19 +11,15 @@ import org.gradproj.heartrate.fragment.CameraFragment
 
 
 class CameraActivity : AppCompatActivity(){
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if(savedInstanceState == null){
-            changeFragment(CameraFragment())
-        }
 
         val permissionListener: PermissionListener =
             object : PermissionListener {
                 override fun onPermissionGranted() {
                     Toast.makeText(this@CameraActivity, "Permission Granted", Toast.LENGTH_SHORT).show()
+                    changeFragment(CameraFragment())
                 }
                 override fun onPermissionDenied(deniedPermissions: List<String?>) {
                     Toast.makeText(
@@ -35,6 +31,10 @@ class CameraActivity : AppCompatActivity(){
             .setDeniedMessage("권한 허용 거부시 기능을 정상적으로 이용할 수 없습니다.")
             .setPermissions(Manifest.permission.CAMERA)
             .check()
+
+//        if(savedInstanceState == null){
+//            changeFragment(CameraFragment())
+//        }
     }
 
     private fun changeFragment(cameraFragment: Fragment) {

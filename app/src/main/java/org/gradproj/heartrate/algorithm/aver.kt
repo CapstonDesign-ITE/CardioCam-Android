@@ -3,8 +3,9 @@ package org.gradproj.heartrate.algorithm
 
 /**
  * 분포계산 클래스
- * 분포계산만을 위한 클래스임
+ * 분포계산만을 위한 클래스임 - 평가점수 파트
  */
+
 
 class aver() {
 

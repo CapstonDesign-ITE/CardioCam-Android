@@ -1,14 +1,18 @@
 package org.gradproj.heartrate.algorithm
 
 // 피그-밸리 알고리즘에서 벨리를 먼저 구하고 도출한 프레임 값을 이용하여 수축, 이완기 최대값을 각각 구해야 함
-class peak(i1:Int, i2: Int) {
+class peak() {
+
     var xi :Array<Double?> = Array(size){null}
-    init{
-         peakFinder(i1,i2)
-         s1(i1,i2)
-         s2(i1,i2)
-         s3(i1,i2)
+
+    constructor (i1:Int, i2: Int) : this() {
+        s1(i1,i2)
+        s2(i1,i2)
+        s3(i1,i2)
+        peakFinder(i1,i2)
+        localPeakFinder(i1,i2)
     }
+
 
     fun s1(i1: Int, i2 : Int): Double {
         var max1 : Double? = diffR[i1-1]
@@ -57,36 +61,55 @@ class peak(i1:Int, i2: Int) {
             return ( (diffR[i1-1]!! - sum1!!/i2) + (diffR[i1-1]!! - sum2!!/i2) )/2
     }
     fun peakFinder(i1: Int, i2: Int) : Double {
+        var saveFrame : Int = 0
         var saveMax : Double = 0.0
-        for (i in i1..i2){
+        for (i in i1-1..i2-1){
         if (diffR[i]!! > this.s1(0,size-1))
          {
             saveMax = diffR[i]!!
+             saveFrame = i+1
          }
         }
         if (saveMax == 0.0) {
-            for (i in i1..i2) {
+            saveMax = diffR[i1-1]!!
+            for (i in i1-1..i2-1) {
                 if (diffR[i]!! >= saveMax) {
                     saveMax = diffR[i]!!
+                    saveFrame = i+1
                 }
             }
         }
         return saveMax
 
     }
+    fun localPeakFinder(i1: Int,i2: Int) : Array<Double?> {
+        var saveLocalPeak : Array<Double?> = Array(size){null}
+        var count : Int = 0
+        for (i in i1-1..i2-1){
+           if (diffR[i]!! > diffR[i-1]!! && diffR[i]!! > diffR[i+1]!!){
+               saveLocalPeak[count] = i as Double
+               count++
+           }
+        }
+        return saveLocalPeak
+    } //로컬피크를 구할때 사용
 }// 실제 피크가 나오는 알고리즘
 
 
 
-class valley(i1:Int, i2: Int,i3:Double) {
+class valley() {
     var xi :Array<Double?> = Array(size){null}
-        init{
+
+    constructor( i1:Int, i2: Int,i3:Double) : this(){
+
         valleyFinder(i1,i2) // 해당 구간에 지역벨리가 있는지 찾는 함수
-        s1(i1,i2)
         valleyFinder(i3) // 근사치로 구한 벨리를 기준으로 실제 벨리를 구한다.
+        s1(i1,i2)
         s2(i1,i2)
         s3(i1,i2)
+        localVelleyFinder(i1,i2)
     }
+
 
     fun xiFinder(){
 
@@ -169,4 +192,16 @@ class valley(i1:Int, i2: Int,i3:Double) {
         }
         else return false
     } // 해당 지점에 벨리가 있는지 찾아내는 함수
+
+    fun localVelleyFinder(i1: Int,i2: Int) : Array<Double?> {
+        var saveLocalVelley : Array<Double?> = Array(size){null}
+        var count : Int = 0
+        for (i in i1-1..i2-1){
+            if (diffR[i]!! < diffR[i-1]!! && diffR[i]!! < diffR[i+1]!!){
+                saveLocalVelley[count] = i as Double
+                count++
+            }
+        }
+        return saveLocalVelley
+    } //로컬벨리를 구할때 사용
 }

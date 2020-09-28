@@ -1,6 +1,6 @@
 package org.gradproj.heartrate.algorithm
 
-// r이 최솟값을 갖는 프레임을찾는 클래스
+// r이 최솟값을 갖는 프레임을찾는 클래스 - 평가점수 파트
 class minFinder (t : Int){
 
     var minSub : Double = 0.0

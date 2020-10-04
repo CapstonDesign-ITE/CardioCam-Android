@@ -23,6 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import org.gradproj.heartrate.R
+import org.gradproj.heartrate.helper.LuminosityAnalyzer
 import org.gradproj.heartrate.helper.permissionListenHelper
 import java.lang.Math.max
 import java.lang.Math.min
@@ -50,6 +51,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraInfo : CameraInfo
 
     private lateinit var cameraExecutor : ExecutorService
+    private var cameraStarted = false
 
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -57,25 +59,6 @@ class CameraFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//
-//        val permissionListener: PermissionListener =
-//            object : PermissionListener {
-//                override fun onPermissionGranted() {
-//                    Toast.makeText(context, "권한 허용", Toast.LENGTH_SHORT).show()
-////                    cameraGranted = true
-//                }
-//                override fun onPermissionDenied(deniedPermissions: List<String?>) {
-//                    Toast.makeText(
-//                        context, "권한 거부 되었습니다.", Toast.LENGTH_SHORT).show()
-////                    cameraGranted = false
-//                }
-//            }
-//
-//        TedPermission.with(context)
-//            .setPermissionListener(permissionListener)
-//            .setDeniedMessage("권한 허용 거부시 기능을 정상적으로 이용할 수 없습니다.")
-//            .setPermissions(Manifest.permission.CAMERA)
-//            .check()
     }
 
     override fun onCreateView(
@@ -110,7 +93,7 @@ class CameraFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        cameraStarted = false
 
         cameraExecutor.shutdown()
         displayManager.unregisterDisplayListener(displayListener)
@@ -118,6 +101,7 @@ class CameraFragment : Fragment() {
         if(cameraInfo.torchState.value == TorchState.ON){
             cameraControl.enableTorch(false)
         }
+        super.onDestroy()
     }
 
 //    @SuppressLint("MissingPermission")
@@ -167,8 +151,6 @@ class CameraFragment : Fragment() {
 
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                // We request aspect ratio but no resolution to match preview config, but letting
-                // CameraX optimize for whatever specific resolution best fits our use cases
                 .setTargetAspectRatio(screenAspectRatio)
                 .setTargetRotation(rotation)
                 .build()
@@ -212,76 +194,20 @@ class CameraFragment : Fragment() {
         controls.findViewById<Button>(R.id.btn_start_video)
     }
 
-    private class LuminosityAnalyzer(listener: LumaListener? = null) : ImageAnalysis.Analyzer {
-        override fun analyze(image: ImageProxy) {
-            if (listeners.isEmpty()) {
-                image.close()
-                return
-            }
-
-            // Keep track of frames analyzed
-            val currentTime = System.currentTimeMillis()
-            frameTimestamps.push(currentTime)
-
-            while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
-            val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
-            val timestampLast = frameTimestamps.peekLast() ?: currentTime
-
-            // 30fps
-            framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
-                    frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
-
-            lastAnalyzedTimestamp = frameTimestamps.first
-
-            val buffer = image.planes[0].buffer
-            val data = buffer.toByteArray()
-
-            // Convert the data into an array of pixel values ranging 0-255
-            val pixels = data.map { it.toInt() and 0xFF }
-
-            // Compute average luminance for the image
-            val luma = pixels.average()
-            val redLuma = pixels.size
-            Log.d("luminous analyzer fps",framesPerSecond.toString() + redLuma)
-
-            listeners.forEach { it(luma) }
-
-            image.close()
-        }
-
-        private val frameRateWindow = 8
-        private val frameTimestamps = ArrayDeque<Long>(5)
-        private val listeners = ArrayList<LumaListener>().apply { listener?.let { add(it) } }
-        private var lastAnalyzedTimestamp = 0L
-        var framesPerSecond: Double = -1.0
-            private set
-
-        /**
-         * Used to add listeners that will be called with each luma computed
-         */
-        fun onFrameAnalyzed(listener: LumaListener) = listeners.add(listener)
-
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind()    // Rewind the buffer to zero
-            val data = ByteArray(remaining())
-            get(data)   // Copy the buffer into a byte array
-            return data // Return the byte array
-
-        }
-    }
-
     private fun toggleTorch(){
         cameraInfo = camera?.cameraInfo!!
         cameraControl = camera?.cameraControl!!
 
         if(cameraInfo.torchState.value == TorchState.ON){
             cameraControl.enableTorch(false)
+            cameraStarted = true
             Toast.makeText(requireContext(), "심박 데이터 추출이 완료되었습니다",Toast.LENGTH_SHORT)
                 .show()
         }else{
             cameraControl.enableTorch(true)
             Toast.makeText(requireContext(), "심박 데이터 추출이 완료될 때까지\n손을 떼지 말아주세요",Toast.LENGTH_SHORT)
                 .show()
+            cameraStarted = false
         }
     }
 

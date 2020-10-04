@@ -1,14 +1,14 @@
 package org.gradproj.heartrate.algorithm
 
 //wck를 계산하기 위한 알고리즘
-class diffK(i:Int) {
+class diffK() {
 
     var MkCk : mkCk = mkCk()
     var mkSum : Int = 0
     var mkCkSum : Double = 0.0
 
 
-    init{
+    constructor(i:Int) : this() {
         mkFinder(i)
         mkCkFinder(i)
         wck(i)

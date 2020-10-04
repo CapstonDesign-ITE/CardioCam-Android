@@ -7,23 +7,23 @@ class SDF {
 
     init{
         DN()
-        DP(0, standardValley-1)
-        SP(standardValley, size-1)
+        DP()
+        SP()
 
 
     }
 
-    fun DP (i1:Int,i2:Int):Double {
-        return Peak.peakFinder(i1,i2)
+    fun DP ():Double {
+        return Peak.peakFinder(0, standardValley)
     }
 
 
-    fun SP (i1:Int,i2:Int):Double  {
-        return Peak.peakFinder(i1,i2)
+    fun SP ():Double  {
+        return Peak.peakFinder(standardValley, size-1)
     }
 
     fun DN(): Double {
 
-        return  Valley.valleyFinder(Valley.s1(0,size-1))
+        return  Valley.valleyFinder()
     }
 }

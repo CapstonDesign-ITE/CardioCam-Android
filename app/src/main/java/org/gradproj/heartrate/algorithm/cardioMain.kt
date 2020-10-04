@@ -18,6 +18,7 @@ var hI : Array<Double?> = Array (size){null} //diffR의 분포
 var s : Double= 0.0 // pr 값이 저장된 곳
 var k : Int = 0
 var standardValley : Int = 0 // 수축- 확장 최대를 구하기 위한 기준 벨리
+var syDi : Array<Double?> = Array(size) {null}
 
 
 val x : Int = 1280
@@ -68,7 +69,25 @@ class cardioMain {
         if (s>=0.85){
             var Imcy : imcy = imcy()
             var ButterWorth : butterWorth = butterworth()
-            var syDi : Array<Double> = ButterWorth (Imcy.cal())
+            syDi = ButterWorth (Imcy.cal())
+            var sdf : SDF = SDF()
+
+            var h1 : Array<Double?> = Array(3){null}
+            var t1 : Array<Double?> = Array(4){null}
+            var s1 : Array<Double?> = Array(4){null}
+
+            h1[1] = sdf.DN()
+            h1[0] = sdf.DP()
+            t1[0] = t
+            t1[1] = standardValley - t
+            h1[2] = sdf.SP()
+            t1[2] = t -standardValley
+            h1[3] = syDi[size-1]
+            t1[3] = size - 1 - t1[2]
+            s1[0] = h1[0] / t1 [0]!!
+            s1[1] = h1[1] - h1[0] / t1 [1]!!
+            s1[2] = h1[1] - h1[2] / t1 [2]!!
+            s1[3] = h1[3] -h1[2] / t1 [3]!!
 
         }
 

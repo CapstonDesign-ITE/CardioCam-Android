@@ -28,7 +28,7 @@ val y : Int = 720
 
 class cardioMain {
 
-}
+
     var pr : Pr = Pr()
     var sPre : Double = 0.0
     var FLPre : Double = 0.0
@@ -72,8 +72,10 @@ class cardioMain {
             syDi = ButterWorth (Imcy.cal())
             var sdf : SDF = SDF()
 
+// SYDI 형상추출부분
+
             var h1 : Array<Double?> = Array(3){null}
-            var t1 : Array<Double?> = Array(4){null}
+            var t1 : Array<Int?> = Array(4){null}
             var s1 : Array<Double?> = Array(4){null}
 
             h1[1] = sdf.DN()
@@ -83,7 +85,7 @@ class cardioMain {
             h1[2] = sdf.SP()
             t1[2] = t -standardValley
             h1[3] = syDi[size-1]
-            t1[3] = size - 1 - t1[2]
+            t1[3] = size - 1 - t1[2]!!
             s1[0] = h1[0] / t1 [0]!!
             s1[1] = h1[1] - h1[0] / t1 [1]!!
             s1[2] = h1[1] - h1[2] / t1 [2]!!
@@ -92,3 +94,4 @@ class cardioMain {
         }
 
     }
+}

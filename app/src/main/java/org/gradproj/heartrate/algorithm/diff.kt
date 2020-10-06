@@ -1,17 +1,26 @@
 package org.gradproj.heartrate.algorithm
 
-//diffR에 대한 계산과 diffR의 분포인 hI를 계산
+//diffR에 대한 계산과 diffR의 분포인 hI를 계산 - 평가점수 파트
 
 class diff() {
 
     var MaxFinder : maxFinder = maxFinder(t)
     var MinFinder : minFinder = minFinder(t)
     var Aver : aver = aver()
+
+
     init{
+
+
+        cal2()
+
+      }
+
+    fun cal2(){
+
         diffR[0] = maxR - minR
 
         hI[0] = 0.0
-
         for (i in 1..29) {
             MaxFinder.comp()
             MinFinder.comp()
@@ -19,8 +28,7 @@ class diff() {
 
             cal()
         }
-
-      }
+    }
     fun cal() {
        for(i in 1..30)
        {

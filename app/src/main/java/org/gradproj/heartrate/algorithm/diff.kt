@@ -27,7 +27,6 @@ class diff() {
             diffR[i]= maxR- minR
 
             cal()
-
         }
     }
     fun cal() {

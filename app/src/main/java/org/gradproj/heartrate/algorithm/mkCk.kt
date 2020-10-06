@@ -1,7 +1,6 @@
 package org.gradproj.heartrate.algorithm
 // 단순 mkck와 mk값을 구해서 wck를 구하는 클래스
 class mkCk() {
-
     constructor(i:Int) : this() {
         mk(i)
         ck(i)

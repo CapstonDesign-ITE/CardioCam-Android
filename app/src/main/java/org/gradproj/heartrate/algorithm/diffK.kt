@@ -6,8 +6,7 @@ class diffK() {
     var MkCk : mkCk = mkCk()
     var mkSum : Int = 0
     var mkCkSum : Double = 0.0
-
-
+  
     constructor(i:Int) : this() {
         mkFinder(i)
         mkCkFinder(i)

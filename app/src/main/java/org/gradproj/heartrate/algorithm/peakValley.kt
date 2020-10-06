@@ -4,8 +4,8 @@ import org.gradproj.heartrate.algorithm.diffR as syDi
 
 // 피그-밸리 알고리즘에서 벨리를 먼저 구하고 도출한 프레임 값을 이용하여 수축, 이완기 최대값을 각각 구해야 함
 // 순서 -> 벨리먼저 구하고 벨리를 기준으로 앞쪽 피크 뒤쪽 피크 값을 구한다.
-class peak() {
 
+class peak() {
     var xi :Array<Double?> = Array(size){null}
 
     constructor (i1:Int, i2: Int) : this() {

@@ -11,6 +11,7 @@ import java.util.ArrayList
 
 class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyzer {
 
+    val converter = RGBConverter()
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
     private val listeners = ArrayList<LumaListener>().apply { listener?.let { add(it) } }
@@ -49,22 +50,35 @@ class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyz
         lastAnalyzedTimestamp = frameTimestamps.first
 
         // set buffer & buffer byte array
-        val buffer = image.planes[0].buffer
-        val data = buffer.toByteArray()
+        val bufferY = image.planes[0].buffer // in buffer set Y
+        val bufferU = image.planes[1].buffer // buffer set U
+        val bufferV = image.planes[2].buffer // buffer set V
+        val dataY = bufferY.toByteArray()
+        val dataV = bufferV.toByteArray()
+        val data = bufferU.toByteArray()
 
-        val bitmapFile = BitmapFactory.decodeByteArray(data, 0, data.size)
+//        val bitmapFile = BitmapFactory.decodeByteArray(data, 0, data.size)
 
         // Convert the data into an array of pixel values ranging 0-255
-        val pixels = data.map { it.toInt() and 0xFF }
+        val pixelV = bufferV.toByteArray().map { it.toInt() and 0xFF }
+        val pixelY = dataY.map { it.toInt() and 0xFF }
+        val pixels:ArrayList<Double> = ArrayList()
 
+        pixelY.forEachIndexed { index, value ->
+            pixels.add(converter.setRChannel(value, pixelV[index]))
+        }
+        // YUV 값을 토대로 R 값 추출
+        val redAvg = pixels.average()
+        Log.d("yuv to Red channel", redAvg.toString())
 
         // Compute average luminance for the image
-        val luma = pixels.average()
-        Log.d("luminous analyzer fps",framesPerSecond.toString() +"luma : "+ luma)
+        val luminance = pixelY.average()
+        Log.w("luminous analyzer fps",framesPerSecond.toString() +"luma : "+ redAvg)
 
-        listeners.forEach { it(luma) }
+        listeners.forEach { it(luminance)}
 
         image.close()
     }
 
 }
+

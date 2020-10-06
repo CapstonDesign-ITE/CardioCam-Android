@@ -31,10 +31,6 @@ class CameraActivity : AppCompatActivity(){
             .setDeniedMessage("권한 허용 거부시 기능을 정상적으로 이용할 수 없습니다.")
             .setPermissions(Manifest.permission.CAMERA)
             .check()
-
-//        if(savedInstanceState == null){
-//            changeFragment(CameraFragment())
-//        }
     }
 
     private fun changeFragment(cameraFragment: Fragment) {

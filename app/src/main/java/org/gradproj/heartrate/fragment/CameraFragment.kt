@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
 import org.gradproj.heartrate.helper.LuminosityAnalyzer
 import org.gradproj.heartrate.helper.permissionListenHelper
@@ -71,6 +72,11 @@ class CameraFragment : Fragment() {
         val btnTorchOn = rootView.findViewById<Button>(R.id.btn_start_video)
         btnTorchOn.setOnClickListener {
             toggleTorch()
+        }
+
+        btn_stop_video.setOnClickListener {
+            cameraStarted = false
+            cameraExecutor.shutdown()
         }
 
         return rootView
@@ -207,7 +213,7 @@ class CameraFragment : Fragment() {
             cameraControl.enableTorch(true)
             Toast.makeText(requireContext(), "심박 데이터 추출이 완료될 때까지\n손을 떼지 말아주세요",Toast.LENGTH_SHORT)
                 .show()
-            cameraStarted = false
+            cameraStarted = true
         }
     }
 

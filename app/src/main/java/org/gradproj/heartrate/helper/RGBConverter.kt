@@ -1,10 +1,12 @@
 package org.gradproj.heartrate.helper
 
 class RGBConverter {
-    fun getRChannel(Y:Double, V:Double): Double {
-        var rChannel = 0.0
-        rChannel = (PERCENT_Y *(Y-16) + PERCENT_V_TO_R * (V-128))
-        return rChannel
+    private var rChannelValue = 0.0
+        get() = field
+
+    fun setRChannel(Y:Int, V:Int): Double {
+        rChannelValue = (PERCENT_Y *(Y-16) + PERCENT_V_TO_R * (V-128))
+        return rChannelValue
     }
     fun getGChannel(Y:Double, V:Double, U:Double): Double {
         var gChannel = 0.0

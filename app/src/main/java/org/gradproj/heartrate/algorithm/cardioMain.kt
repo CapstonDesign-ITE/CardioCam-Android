@@ -26,16 +26,25 @@ val y : Int = 720
 const val TAG_ALGORITHM = "algorithm test"
 
 class cardioMain {
-    var pr : Pr = Pr()
+    var pr : Pr = Pr(r,g,b)
     var sPre : Double = 0.0
     var FLPre : Double = 0.0
     var ISO :Int =550
     var Diff : diff = diff()
     var AssessmentScore : assessmentScore = assessmentScore()
     var camera : Camera = Camera()
-
+    var Reset : reset = reset()
     var startOrNot :Boolean = pr.finger()
-    fun cardioFun() {
+
+    init {
+        cardioFunR() // R에 대한 결과 값 계산
+        cardioFunG() // G에 대한 결과 값 계산
+        cardioFunB() // B에 대한 결과 값 계산
+    } // 실행부분
+
+
+    fun cardioFunR() {
+        Reset.white()
         if (startOrNot) {
             Diff.cal2()
             AssessmentScore
@@ -80,10 +89,114 @@ class cardioMain {
             t1[2] = t -standardValley
             h1[3] = syDi[size-1]
             t1[3] = size - 1 - t1[2]!!
-            s1[0] = h1[0] / t1 [0]!!
-            s1[1] = h1[1] - h1[0] / t1 [1]!!
-            s1[2] = h1[1] - h1[2] / t1 [2]!!
-            s1[3] = h1[3] -h1[2] / t1 [3]!!
+            s1[0] = h1[0]!! / t1 [0]!!
+            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
+            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
+            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
+        }
+    }
+    fun cardioFunG() {
+        if (startOrNot) {
+            Reset.white()
+            Diff.cal3()
+            AssessmentScore
+
+            while (s <= 0.85) {
+                sPre = s
+                Log.d(TAG_ALGORITHM, s.toString())
+                //TODO camera.flashlight 값 Y (luma)로 변경
+                var FL: Double = camera.flashlight
+                var Feedback = s - sPre
+
+                if (FL - FLPre > 0.85) {
+                    FLPre = FL
+                    var OffsetFL: Double = Feedback * 0.05
+                    FL = FLPre + OffsetFL
+                    camera.flashlight = FL
+                } else {
+                    var OffsetISO: Double = Feedback * 5
+                    ISO = ISO + OffsetISO
+                    camera.ISO = ISO
+                }
+            }
+        }
+        // 임계값이 0.85를 넘으면 프로그램 실행
+        if (s>=0.85){
+            val Imcy : imcy = imcy()
+            val ButterWorth : butterWorth = butterworth()
+            syDi = ButterWorth (Imcy.cal())
+            val sdf : SDF = SDF()
+
+// SYDI 형상추출부분
+
+            val h1 : Array<Double?> = Array(3){null}
+            val t1 : Array<Int?> = Array(4){null}
+            val s1 : Array<Double?> = Array(4){null}
+
+            h1[1] = sdf.DN()
+            h1[0] = sdf.DP()
+            t1[0] = t
+            t1[1] = standardValley - t
+            h1[2] = sdf.SP()
+            t1[2] = t -standardValley
+            h1[3] = syDi[size-1]
+            t1[3] = size - 1 - t1[2]!!
+            s1[0] = h1[0]!! / t1 [0]!!
+            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
+            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
+            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
+        }
+    }
+    fun cardioFunB() {
+        if (startOrNot) {
+            Reset.white()
+            Diff.cal4()
+            AssessmentScore
+
+            while (s <= 0.85) {
+                sPre = s
+                Log.d(TAG_ALGORITHM, s.toString())
+                //TODO camera.flashlight 값 Y (luma)로 변경
+                var FL: Double = camera.flashlight
+                var Feedback = s - sPre
+
+                if (FL - FLPre > 0.85) {
+                    FLPre = FL
+                    var OffsetFL: Double = Feedback * 0.05
+                    FL = FLPre + OffsetFL
+                    camera.flashlight = FL
+                } else {
+                    var OffsetISO: Double = Feedback * 5
+                    ISO = ISO + OffsetISO
+                    camera.ISO = ISO
+                }
+            }
+        }
+        // 임계값이 0.85를 넘으면 프로그램 실행
+        if (s>=0.85){
+            val Imcy : imcy = imcy()
+            val ButterWorth : butterWorth = butterworth()
+            syDi = ButterWorth (Imcy.cal())
+            val sdf : SDF = SDF()
+
+// SYDI 형상추출부분
+
+            val h1 : Array<Double?> = Array(3){null}
+            val t1 : Array<Int?> = Array(4){null}
+            val s1 : Array<Double?> = Array(4){null}
+
+            h1[1] = sdf.DN()
+            h1[0] = sdf.DP()
+            t1[0] = t
+            t1[1] = standardValley - t
+            h1[2] = sdf.SP()
+            t1[2] = t -standardValley
+            h1[3] = syDi[size-1]
+            t1[3] = size - 1 - t1[2]!!
+            s1[0] = h1[0]!! / t1 [0]!!
+            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
+            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
+            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
         }
     }
 }

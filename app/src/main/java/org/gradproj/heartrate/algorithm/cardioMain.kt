@@ -23,6 +23,8 @@ var syDi : Array<Double?> = Array(size) {null}
 val x : Int = 1280
 val y : Int = 720
 
+
+
 const val TAG_ALGORITHM = "algorithm test"
 
 class cardioMain {
@@ -37,13 +39,19 @@ class cardioMain {
     var startOrNot :Boolean = pr.finger()
 
     init {
+
         cardioFunR() // R에 대한 결과 값 계산
         cardioFunG() // G에 대한 결과 값 계산
-        cardioFunB() // B에 대한 결과 값 계산
+        cardioFunB() // B에 대한 결과 값 계산 - 셋 다 h,t,s 값에 대한 어레이더블값 리턴
+        // 실행할때 cardioFunR부터 실행후 R G B 순으로 실행 추출하시오
     } // 실행부분
 
 
-    fun cardioFunR() {
+    fun cardioFunR() : Array<Double?> {
+        var hR : Array<Double?> = Array(3){null}
+        var tR : Array<Int?> = Array(4){null}
+        var sR : Array<Double?> = Array(4){null} // 형상추출 R
+
         Reset.white()
         if (startOrNot) {
             Diff.cal2()
@@ -77,51 +85,36 @@ class cardioMain {
 
 // SYDI 형상추출부분
 
-            val h1 : Array<Double?> = Array(3){null}
-            val t1 : Array<Int?> = Array(4){null}
-            val s1 : Array<Double?> = Array(4){null}
 
-            h1[1] = sdf.DN()
-            h1[0] = sdf.DP()
-            t1[0] = t
-            t1[1] = standardValley - t
-            h1[2] = sdf.SP()
-            t1[2] = t -standardValley
-            h1[3] = syDi[size-1]
-            t1[3] = size - 1 - t1[2]!!
-            s1[0] = h1[0]!! / t1 [0]!!
-            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
-            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
-            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
+
+            hR[1] = sdf.DN()
+            hR[0] = sdf.DP()
+            tR[0] = t
+            tR[1] = standardValley - t
+            hR[2] = sdf.SP()
+            tR[2] = t -standardValley
+            hR[3] = syDi[size-1]
+            tR[3] = size - 1 - tR[2]!!
+            sR[0] = hR[0]!! / tR [0]!!
+            sR[1] = hR[1]!! - hR[0]!! / tR [1]!!
+            sR[2] = hR[1]!! - hR[2]!! / tR [2]!!
+            sR[3] = hR[3]!! - hR[2]!! / tR [3]!!
         }
+        return hR; tR ; sR
     }
-    fun cardioFunG() {
-        if (startOrNot) {
-            Reset.white()
+
+
+    fun cardioFunG(): Array<Double?> {
+
+        var hG : Array<Double?> = Array(3){null}
+        var tG : Array<Int?> = Array(4){null}
+        var sG : Array<Double?> = Array(4){null}// 형상추출 G
+
+            Reset.white2()
             Diff.cal3()
-            AssessmentScore
 
-            while (s <= 0.85) {
-                sPre = s
-                Log.d(TAG_ALGORITHM, s.toString())
-                //TODO camera.flashlight 값 Y (luma)로 변경
-                var FL: Double = camera.flashlight
-                var Feedback = s - sPre
 
-                if (FL - FLPre > 0.85) {
-                    FLPre = FL
-                    var OffsetFL: Double = Feedback * 0.05
-                    FL = FLPre + OffsetFL
-                    camera.flashlight = FL
-                } else {
-                    var OffsetISO: Double = Feedback * 5
-                    ISO = ISO + OffsetISO
-                    camera.ISO = ISO
-                }
-            }
-        }
-        // 임계값이 0.85를 넘으면 프로그램 실행
-        if (s>=0.85){
+
             val Imcy : imcy = imcy()
             val ButterWorth : butterWorth = butterworth()
             syDi = ButterWorth (Imcy.cal())
@@ -129,51 +122,34 @@ class cardioMain {
 
 // SYDI 형상추출부분
 
-            val h1 : Array<Double?> = Array(3){null}
-            val t1 : Array<Int?> = Array(4){null}
-            val s1 : Array<Double?> = Array(4){null}
 
-            h1[1] = sdf.DN()
-            h1[0] = sdf.DP()
-            t1[0] = t
-            t1[1] = standardValley - t
-            h1[2] = sdf.SP()
-            t1[2] = t -standardValley
-            h1[3] = syDi[size-1]
-            t1[3] = size - 1 - t1[2]!!
-            s1[0] = h1[0]!! / t1 [0]!!
-            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
-            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
-            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
-        }
+
+            hG[1] = sdf.DN()
+            hG[0] = sdf.DP()
+            tG[0] = t
+            tG[1] = standardValley - t
+            hG[2] = sdf.SP()
+            tG[2] = t -standardValley
+            hG[3] = syDi[size-1]
+            tG[3] = size - 1 - tG[2]!!
+            sG[0] = hG[0]!! / tG [0]!!
+            sG[1] = hG[1]!! - hG[0]!! / tG [1]!!
+            sG[2] = hG[1]!! - hG[2]!! / tG [2]!!
+            sG[3] = hG[3]!! - hG[2]!! / tG [3]!!
+
+            return hG; tG; sG
     }
-    fun cardioFunB() {
-        if (startOrNot) {
-            Reset.white()
+
+
+    fun cardioFunB(): Array<Double?> {
+
+        var hB : Array<Double?> = Array(3){null}
+        var tB : Array<Int?> = Array(4){null}
+        var sB : Array<Double?> = Array(4){null}// 형상추출 B
+
+            Reset.white2()
             Diff.cal4()
-            AssessmentScore
 
-            while (s <= 0.85) {
-                sPre = s
-                Log.d(TAG_ALGORITHM, s.toString())
-                //TODO camera.flashlight 값 Y (luma)로 변경
-                var FL: Double = camera.flashlight
-                var Feedback = s - sPre
-
-                if (FL - FLPre > 0.85) {
-                    FLPre = FL
-                    var OffsetFL: Double = Feedback * 0.05
-                    FL = FLPre + OffsetFL
-                    camera.flashlight = FL
-                } else {
-                    var OffsetISO: Double = Feedback * 5
-                    ISO = ISO + OffsetISO
-                    camera.ISO = ISO
-                }
-            }
-        }
-        // 임계값이 0.85를 넘으면 프로그램 실행
-        if (s>=0.85){
             val Imcy : imcy = imcy()
             val ButterWorth : butterWorth = butterworth()
             syDi = ButterWorth (Imcy.cal())
@@ -181,22 +157,22 @@ class cardioMain {
 
 // SYDI 형상추출부분
 
-            val h1 : Array<Double?> = Array(3){null}
-            val t1 : Array<Int?> = Array(4){null}
-            val s1 : Array<Double?> = Array(4){null}
 
-            h1[1] = sdf.DN()
-            h1[0] = sdf.DP()
-            t1[0] = t
-            t1[1] = standardValley - t
-            h1[2] = sdf.SP()
-            t1[2] = t -standardValley
-            h1[3] = syDi[size-1]
-            t1[3] = size - 1 - t1[2]!!
-            s1[0] = h1[0]!! / t1 [0]!!
-            s1[1] = h1[1]!! - h1[0]!! / t1 [1]!!
-            s1[2] = h1[1]!! - h1[2]!! / t1 [2]!!
-            s1[3] = h1[3]!! - h1[2]!! / t1 [3]!!
-        }
+
+            hB[1] = sdf.DN()
+            hB[0] = sdf.DP()
+            tB[0] = t
+            tB[1] = standardValley - t
+            hB[2] = sdf.SP()
+            tB[2] = t -standardValley
+            hB[3] = syDi[size-1]
+            tB[3] = size - 1 - tB[2]!!
+            sB[0] = hB[0]!! / tB [0]!!
+            sB[1] = hB[1]!! - hB[0]!! / tB [1]!!
+            sB[2] = hB[1]!! - hB[2]!! / tB [2]!!
+            sB[3] = hB[3]!! - hB[2]!! / tB [3]!!
+
+        return hB; tB ; sB
+
     }
 }

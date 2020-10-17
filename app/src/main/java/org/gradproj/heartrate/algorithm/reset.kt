@@ -4,7 +4,9 @@ package org.gradproj.heartrate.algorithm
 class reset() {
     init {
         white()
+        white2()
     }
+
     fun white() {
          t  = 0 // 프레임 번호
          tMin = 0 // 최소값을 갖는 프레임
@@ -17,5 +19,16 @@ class reset() {
          k = 0
          standardValley  = 0 // 수축- 확장 최대를 구하기 위한 기준 벨리
          syDi  = Array(size) {null}
+    }
+    fun white2() {
+        t  = 0 // 프레임 번호
+        tMin = 0 // 최소값을 갖는 프레임
+        tMax = 0 // 최대값을 갖는 프레임
+        diffR =  Array(size) { null} // diffR 값
+        maxR  = 0.0 // diffR 중 최대
+        minR  = 0.0 // diffR 중 최소
+        k = 0
+        standardValley  = 0 // 수축- 확장 최대를 구하기 위한 기준 벨리
+        syDi  = Array(size) {null}
     }
 }

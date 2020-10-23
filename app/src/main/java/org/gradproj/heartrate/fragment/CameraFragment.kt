@@ -1,5 +1,6 @@
 package org.gradproj.heartrate.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
@@ -19,7 +20,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
+import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
+import org.gradproj.heartrate.helper.LuminosityAnalyzer
+import org.gradproj.heartrate.helper.permissionListenHelper
 import java.lang.Math.max
 import java.lang.Math.min
 import java.nio.ByteBuffer
@@ -31,7 +37,6 @@ import kotlin.math.abs
 typealias LumaListener = (luma: Double) -> Unit
 
 class CameraFragment : Fragment() {
-
     private lateinit var container : ConstraintLayout
     private lateinit var viewFinder : PreviewView
     private lateinit var broadcastManager: LocalBroadcastManager
@@ -47,6 +52,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraInfo : CameraInfo
 
     private lateinit var cameraExecutor : ExecutorService
+    private var cameraStarted = false
 
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -66,6 +72,11 @@ class CameraFragment : Fragment() {
         val btnTorchOn = rootView.findViewById<Button>(R.id.btn_start_video)
         btnTorchOn.setOnClickListener {
             toggleTorch()
+        }
+
+        btn_stop_video.setOnClickListener {
+            cameraStarted = false
+            cameraExecutor.shutdown()
         }
 
         return rootView
@@ -88,7 +99,7 @@ class CameraFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        cameraStarted = false
 
         cameraExecutor.shutdown()
         displayManager.unregisterDisplayListener(displayListener)
@@ -96,9 +107,10 @@ class CameraFragment : Fragment() {
         if(cameraInfo.torchState.value == TorchState.ON){
             cameraControl.enableTorch(false)
         }
+        super.onDestroy()
     }
 
-    @SuppressLint("MissingPermission")
+//    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -126,7 +138,6 @@ class CameraFragment : Fragment() {
     private fun bindCameraUseCases(){
         val metrics = DisplayMetrics().also{
             viewFinder.display.getRealMetrics(it)
-
         }
 
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
@@ -146,8 +157,6 @@ class CameraFragment : Fragment() {
 
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                // We request aspect ratio but no resolution to match preview config, but letting
-                // CameraX optimize for whatever specific resolution best fits our use cases
                 .setTargetAspectRatio(screenAspectRatio)
                 .setTargetRotation(rotation)
                 .build()
@@ -191,76 +200,20 @@ class CameraFragment : Fragment() {
         controls.findViewById<Button>(R.id.btn_start_video)
     }
 
-    private class LuminosityAnalyzer(listener: LumaListener? = null) : ImageAnalysis.Analyzer {
-        override fun analyze(image: ImageProxy) {
-            if (listeners.isEmpty()) {
-                image.close()
-                return
-            }
-
-            // Keep track of frames analyzed
-            val currentTime = System.currentTimeMillis()
-            frameTimestamps.push(currentTime)
-
-            while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
-            val timestampFirst = frameTimestamps.peekFirst() ?: currentTime
-            val timestampLast = frameTimestamps.peekLast() ?: currentTime
-
-            // 30fps
-            framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
-                    frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
-
-            lastAnalyzedTimestamp = frameTimestamps.first
-
-            val buffer = image.planes[0].buffer
-            val data = buffer.toByteArray()
-
-            // Convert the data into an array of pixel values ranging 0-255
-            val pixels = data.map { it.toInt() and 0xFF }
-
-            // Compute average luminance for the image
-            val luma = pixels.average()
-            val redLuma = pixels.size
-            Log.d("luminous analyzer fps",framesPerSecond.toString() + redLuma)
-
-            listeners.forEach { it(luma) }
-
-            image.close()
-        }
-
-        private val frameRateWindow = 8
-        private val frameTimestamps = ArrayDeque<Long>(5)
-        private val listeners = ArrayList<LumaListener>().apply { listener?.let { add(it) } }
-        private var lastAnalyzedTimestamp = 0L
-        var framesPerSecond: Double = -1.0
-            private set
-
-        /**
-         * Used to add listeners that will be called with each luma computed
-         */
-        fun onFrameAnalyzed(listener: LumaListener) = listeners.add(listener)
-
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind()    // Rewind the buffer to zero
-            val data = ByteArray(remaining())
-            get(data)   // Copy the buffer into a byte array
-            return data // Return the byte array
-
-        }
-    }
-
     private fun toggleTorch(){
         cameraInfo = camera?.cameraInfo!!
         cameraControl = camera?.cameraControl!!
 
         if(cameraInfo.torchState.value == TorchState.ON){
             cameraControl.enableTorch(false)
+            cameraStarted = true
             Toast.makeText(requireContext(), "심박 데이터 추출이 완료되었습니다",Toast.LENGTH_SHORT)
                 .show()
         }else{
             cameraControl.enableTorch(true)
             Toast.makeText(requireContext(), "심박 데이터 추출이 완료될 때까지\n손을 떼지 말아주세요",Toast.LENGTH_SHORT)
                 .show()
+            cameraStarted = true
         }
     }
 

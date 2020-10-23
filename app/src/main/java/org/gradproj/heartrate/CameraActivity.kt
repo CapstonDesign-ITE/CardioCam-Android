@@ -11,19 +11,15 @@ import org.gradproj.heartrate.fragment.CameraFragment
 
 
 class CameraActivity : AppCompatActivity(){
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if(savedInstanceState == null){
-            changeFragment(CameraFragment())
-        }
 
         val permissionListener: PermissionListener =
             object : PermissionListener {
                 override fun onPermissionGranted() {
                     Toast.makeText(this@CameraActivity, "Permission Granted", Toast.LENGTH_SHORT).show()
+                    changeFragment(CameraFragment())
                 }
                 override fun onPermissionDenied(deniedPermissions: List<String?>) {
                     Toast.makeText(

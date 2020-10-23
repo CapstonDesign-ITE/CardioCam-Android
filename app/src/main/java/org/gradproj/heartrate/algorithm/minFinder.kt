@@ -1,17 +1,19 @@
 package org.gradproj.heartrate.algorithm
 
 // r이 최솟값을 갖는 프레임을찾는 클래스 - 평가점수 파트
-class minFinder (t : Int){
+class minFinder (){
 
     var minSub : Double = 0.0
 
     init{
-        comp()
+        compR()
+        compG()
+        compB()
 
     }
-        fun comp()
+        fun compR()
         { for(i in 0..t) {
-            minSub = r[i-1]!!
+            minSub = r[i]!!
             if (minR < minSub) {
                 minR = minSub
                 tMin = i
@@ -19,6 +21,24 @@ class minFinder (t : Int){
         }
         }
 
+    fun compG()
+    { for(i in 0..t) {
+        minSub = g[i]!!
+        if (minR < minSub) {
+            minR = minSub
+            tMin = i
+        }
+    }
+    }
+    fun compB()
+    { for(i in 0..t) {
+        minSub = b[i]!!
+        if (minR < minSub) {
+            minR = minSub
+            tMin = i
+        }
+    }
+    }
 
 }
 

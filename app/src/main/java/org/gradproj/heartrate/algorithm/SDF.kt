@@ -8,21 +8,17 @@ class SDF {
         DN()
         DP()
         SP()
-
-
     }
 
     fun DP ():Double {
         return Peak.peakFinder(0, standardValley)
     }
 
-
     fun SP ():Double  {
         return Peak.peakFinder(standardValley, size-1)
     }
 
     fun DN(): Double {
-
         return  Valley.valleyFinder()
     }
 }

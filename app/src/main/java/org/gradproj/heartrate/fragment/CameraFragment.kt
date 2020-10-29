@@ -70,11 +70,12 @@ class CameraFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.layout_camera_preview, container, false)
 
         val btnTorchOn = rootView.findViewById<Button>(R.id.btn_start_video)
+        val btnStop = rootView.findViewById<Button>(R.id.btn_stop_video)
         btnTorchOn.setOnClickListener {
             toggleTorch()
         }
 
-        btn_stop_video.setOnClickListener {
+        btnStop.setOnClickListener {
             cameraStarted = false
             cameraExecutor.shutdown()
         }

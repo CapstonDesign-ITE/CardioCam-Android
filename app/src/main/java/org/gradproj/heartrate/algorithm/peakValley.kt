@@ -16,7 +16,6 @@ class peak() {
         localPeakFinder(i1,i2)
     }
 
-
     fun s1(i1: Int, i2 : Int): Double {
         var max1 : Double? = syDi[i1-1]
         var max2 : Double? = syDi[i1-1]
@@ -108,20 +107,15 @@ return saveLocalPeak
 class valley() {
     var xi :Array<Double?> = Array(size){null}
 
-    constructor( i1:Int, i2: Int,i3:Double) : this(){
+    constructor( i1:Int, i2: Int,i3:Double) : this() {
 
         valleyFinder() // 해당 구간에 지역벨리가 있는지 찾는 함수
 
-        s1(i1,i2)
-        s2(i1,i2)
-        s3(i1,i2)
-        localVelleyFinder(i1,i2)
+        s1(i1, i2)
+        s2(i1, i2)
+        s3(i1, i2)
+        localVelleyFinder(i1, i2)
     }
-
-
-    fun xiFinder(){
-
-    } // 비워둔것 안씀.
 
     fun s1(i1: Int, i2 : Int): Double {
         var min1 : Double? = syDi[i1-1]

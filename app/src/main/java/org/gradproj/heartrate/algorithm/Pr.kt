@@ -12,9 +12,6 @@ class Pr {
 
 
     fun finger(): Boolean{
-        if (fingerInfor!! >= 0.95){
-            return true
-        }
-        else return false
+        return fingerInfor!! >= 0.95
     }
 } // red 채널이 95퍼센트가 넘으면 true를 반환

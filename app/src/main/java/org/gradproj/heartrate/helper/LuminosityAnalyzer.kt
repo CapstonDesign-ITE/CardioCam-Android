@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import org.gradproj.heartrate.algorithm.cardioMain
 import org.gradproj.heartrate.fragment.LumaListener
 import java.nio.ByteBuffer
 import java.util.ArrayDeque
@@ -44,8 +45,8 @@ class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyz
         val timestampLast = frameTimestamps.peekLast() ?: currentTime
 
         // 30fps
-        framesPerSecond = 1.0 / ((timestampFirst - timestampLast) /
-                frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
+        framesPerSecond = 1.0 /
+                ((timestampFirst - timestampLast) / frameTimestamps.size.coerceAtLeast(1).toDouble())*1000.0
 
         lastAnalyzedTimestamp = frameTimestamps.first
 
@@ -64,9 +65,11 @@ class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyz
         val pixelY = dataY.map { it.toInt() and 0xFF }
         val pixels:ArrayList<Double> = ArrayList()
 
-        pixelY.forEachIndexed { index, value ->
-            pixels.add(converter.setRChannel(value, pixelV[index]))
-        }
+        //todo index 에러
+//        pixelY.forEachIndexed { index, value ->
+//            pixels.add(converter.setRChannel(value, pixelV[index-1]))
+//        }
+        
         // YUV 값을 토대로 R 값 추출
         val redAvg = pixels.average()
         Log.d("yuv to Red channel", redAvg.toString())

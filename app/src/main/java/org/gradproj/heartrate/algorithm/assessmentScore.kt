@@ -5,7 +5,6 @@ class assessmentScore {
     var an : Double = diffR[0]!!
 
     init{
-
        An()
         s = an
     }

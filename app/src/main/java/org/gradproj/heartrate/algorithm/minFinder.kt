@@ -1,7 +1,7 @@
 package org.gradproj.heartrate.algorithm
 
 // r이 최솟값을 갖는 프레임을찾는 클래스 - 평가점수 파트
-class minFinder (){
+class minFinder (private val r: Array<Double?>, private val g: Array<Double?>, private val b: Array<Double?>){
 
     var minSub : Double = 0.0
 

@@ -18,7 +18,6 @@ class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyz
     private val listeners = ArrayList<LumaListener>().apply { listener?.let { add(it) } }
     private var lastAnalyzedTimestamp = 0L
     var framesPerSecond: Double = 30.0
-        private set
 
     fun onFrameAnalyzed(listener: LumaListener) = listeners.add(listener)
 
@@ -69,7 +68,7 @@ class LuminosityAnalyzer (listener: LumaListener? = null) : ImageAnalysis.Analyz
 //        pixelY.forEachIndexed { index, value ->
 //            pixels.add(converter.setRChannel(value, pixelV[index-1]))
 //        }
-        
+
         // YUV 값을 토대로 R 값 추출
         val redAvg = pixels.average()
         Log.d("yuv to Red channel", redAvg.toString())

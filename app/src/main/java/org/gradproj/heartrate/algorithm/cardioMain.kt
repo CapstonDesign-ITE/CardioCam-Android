@@ -1,7 +1,5 @@
 package org.gradproj.heartrate.algorithm
 
-import android.graphics.Camera
-import android.util.Log
 import uk.me.berndporr.iirj.Butterworth
 
 //메인
@@ -27,22 +25,24 @@ class cardioMain (){
     var sPre : Double = 0.0
     var FLPre : Double = 0.0
     var ISO :Int =550
-    var Diff : diff = diff()
     var AssessmentScore : assessmentScore = assessmentScore()
     var Reset : reset = reset()
-
     var luminosity :Double = 0.0
     var startOrNot :Boolean = true
 
     val butterworth : Butterworth = Butterworth()
 
-//    var r : Array<Double?> = Array(size) { null} // 빨강영역 프레임 별 강도
-//    var g : Array<Double?> = Array(size) { null} // 초록영역 프레임 별 강도
-//    var b : Array<Double?> = Array(size) { null} // 파랑영역 프레임 별 강도
+    var r : Array<Double?> = Array(size) { null} // 빨강영역 프레임 별 강도
+    var g : Array<Double?> = Array(size) { null} // 초록영역 프레임 별 강도
+    var b : Array<Double?> = Array(size) { null} // 파랑영역 프레임 별 강도
 
     constructor(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>, luma: Double) : this() {
         val pr : Pr = Pr(r,g,b)
         startOrNot = pr.finger()
+
+        this.r = r
+        this.g = g
+        this.b = b
 
         // todo order 가 뭐냐 (넣는 배열....의 개수..?)
         butterworth.bandPass(5, 30.0, 5.15, 9.7)
@@ -53,10 +53,13 @@ class cardioMain (){
         // 실행할때 cardioFunR부터 실행후 R G B 순으로 실행 추출하시오
     }// 생성자 호출과 동시에 시작
 
-    fun cardioFunR() : Array<Double?> {
-        var hR : Array<Double?> = Array(3){null}
-        var tR : Array<Int?> = Array(4){null}
-        var sR : Array<Double?> = Array(4){null} // 형상추출 R
+    val Diff : diff = diff(r, g, b)
+
+
+    private fun cardioFunR() : Array<Double?> {
+        val hR : Array<Double?> = Array(3){null}
+        val tR : Array<Int?> = Array(4){null}
+        val sR : Array<Double?> = Array(4){null} // 형상추출 R
 
         Reset.white()
 //        if (startOrNot) {
@@ -92,8 +95,6 @@ class cardioMain (){
 
         }
         syDi = arrayOf(butterworth.filter(dataDiff))
-
-
         val sdf = SDF()
 
         // SYDI 형상추출부분
@@ -114,11 +115,11 @@ class cardioMain (){
     }
 
 
-    fun cardioFunG(): Array<Double?> {
+    private fun cardioFunG(): Array<Double?> {
 
-        var hG : Array<Double?> = Array(3){null}
-        var tG : Array<Int?> = Array(4){null}
-        var sG : Array<Double?> = Array(4){null}// 형상추출 G
+        val hG : Array<Double?> = Array(3){null}
+        val tG : Array<Int?> = Array(4){null}
+        val sG : Array<Double?> = Array(4){null}// 형상추출 G
 
             Reset.white2()
             Diff.cal3()
@@ -148,11 +149,11 @@ class cardioMain (){
     }
 
 
-    fun cardioFunB(): Array<Double?> {
+    private fun cardioFunB(): Array<Double?> {
 
-        var hB : Array<Double?> = Array(3){null}
-        var tB : Array<Int?> = Array(4){null}
-        var sB : Array<Double?> = Array(4){null}// 형상추출 B
+        val hB : Array<Double?> = Array(3){null}
+        val tB : Array<Int?> = Array(4){null}
+        val sB : Array<Double?> = Array(4){null}// 형상추출 B
 
         Reset.white2()
         Diff.cal4()

@@ -1,6 +1,6 @@
 package org.gradproj.heartrate.algorithm
 // 단순 mkck와 mk값을 구해서 wck를 구하는 클래스
-class mkCk() {
+class MkCk() {
     private var redLuma:Double = 0.0
 
     // TODO i 를 대입하는 생성자 사용하지 않음

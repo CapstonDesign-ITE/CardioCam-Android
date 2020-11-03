@@ -1,9 +1,12 @@
 package org.gradproj.heartrate.algorithm
 
-//wck를 계산하기 위한 알고리즘
-class diffK() {
+/**
+ * wck를 계산
+ * diffK.kt => CalWkCk.kt
+ */
+class CalWkCk() {
 
-    var MkCk : mkCk = mkCk()
+    var mkCk : MkCk = MkCk()
     var mkSum : Int = 0
     var mkCkSum : Double = 0.0
   
@@ -14,13 +17,13 @@ class diffK() {
     }
     fun mkFinder(t1:Int): Double {
         for (i in 0..t1){
-            mkSum += MkCk.mk(i)
+            mkSum += mkCk.mk(i)
         }
         return mkSum as Double
     }
     fun mkCkFinder(t1:Int) :Double {
         for (i in 0..t1){
-            mkCkSum += MkCk.mkCk(i)
+            mkCkSum += mkCk.mkCk(i)
         }
         return mkCkSum
     }

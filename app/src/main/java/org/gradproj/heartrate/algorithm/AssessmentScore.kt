@@ -1,7 +1,12 @@
 package org.gradproj.heartrate.algorithm
 
 //평가점수 an을 계산해주는 클래스 - 평가점수 파트
-class assessmentScore {
+
+/**
+ * assessmentScore.kt -> AssessmentScore.kt
+ *
+ */
+class AssessmentScore {
     var an : Double = diffR[0]!!
 
     init{

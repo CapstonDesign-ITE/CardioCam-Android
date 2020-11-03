@@ -1,7 +1,7 @@
 package org.gradproj.heartrate.algorithm
 
-class imcy {
-    var DiffK: diffK = diffK()
+class Imcy {
+    var diffK: CalWkCk = CalWkCk()
     private lateinit var saveDif : Array<Double>
 
     init{
@@ -10,7 +10,7 @@ class imcy {
 
     fun cal () : Array<Double> {
         for( i in 0..29){
-       saveDif[i] = DiffK.wck(i)}
+       saveDif[i] = diffK.wck(i)}
         return saveDif
     }
 }

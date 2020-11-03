@@ -1,8 +1,8 @@
 package org.gradproj.heartrate.algorithm
  // 수축, 이완 특성 계산식 아직 t,h,s에대한 특성을 구하지 않음
 class SDF {
-    var Valley : valley = valley()
-    var Peak : peak = peak()
+    var Valley : CalValley = CalValley()
+    var Peak : CalPeak = CalPeak()
 
     init{
         DN()
@@ -15,7 +15,7 @@ class SDF {
     }
 
     fun SP ():Double  {
-        return Peak.peakFinder(standardValley, size-1)
+        return Peak.peakFinder(standardValley, frameSize-1)
     }
 
     fun DN(): Double {

@@ -1,11 +1,14 @@
 package org.gradproj.heartrate.algorithm
 
 //diffR에 대한 계산과 diffR의 분포인 hI를 계산 - 평가점수 파트 이부분 comp부분을 바꾸면 사용가능
+/**
+ * file name diff.kt -> CalDiff.kt
+*/
 
-class diff(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>) {
-    private var MaxFinder : maxFinder = maxFinder(r, g, b)
-    private var MinFinder : minFinder = minFinder(r, g, b)
-    private var Aver : aver = aver()
+class CalDiff(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>) {
+    private var maxFinder : MaxValueFinder = MaxValueFinder(r, g, b)
+    private var minFinder : MinValueFinder = MinValueFinder(r, g, b)
+    private var Aver : CalAvg = CalAvg()
 
     init{
         cal2()
@@ -19,8 +22,8 @@ class diff(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>) {
         hI[0] = 0.0
         for (i in 1..29) {
             t++
-            MaxFinder.compR()
-            MinFinder.compR()
+            maxFinder.compR()
+            minFinder.compR()
             diffR[i]= maxR- minR
 
             cal()
@@ -43,8 +46,8 @@ class diff(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>) {
         hI[0] = 0.0
         for (i in 1..29) {
             t++
-            MaxFinder.compG()
-            MinFinder.compG()
+            maxFinder.compG()
+            minFinder.compG()
             diffR[i]= maxR- minR
 
             cal()
@@ -57,8 +60,8 @@ class diff(r: Array<Double?>, g: Array<Double?>, b: Array<Double?>) {
         hI[0] = 0.0
         for (i in 1..29) {
             t++
-            MaxFinder.compB()
-            MinFinder.compB()
+            maxFinder.compB()
+            minFinder.compB()
             diffR[i]= maxR- minR
 
             cal()

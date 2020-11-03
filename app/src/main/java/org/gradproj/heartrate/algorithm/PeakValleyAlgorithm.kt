@@ -5,8 +5,8 @@ import org.gradproj.heartrate.algorithm.diffR as syDi
 // 피그-밸리 알고리즘에서 벨리를 먼저 구하고 도출한 프레임 값을 이용하여 수축, 이완기 최대값을 각각 구해야 함
 // 순서 -> 벨리먼저 구하고 벨리를 기준으로 앞쪽 피크 뒤쪽 피크 값을 구한다.
 
-class peak() {
-    var xi :Array<Double?> = Array(size){null}
+class CalPeak() {
+    var xi :Array<Double?> = Array(frameSize){null}
 
     constructor (i1:Int, i2: Int) : this() {
         s1(i1,i2)
@@ -62,11 +62,12 @@ class peak() {
         }
             return ( (syDi[i1-1]!! - sum1!!/i2) + (syDi[i1-1]!! - sum2!!/i2) )/2
     }
+
     fun peakFinder(i1: Int, i2: Int) : Double {
         var saveFrame : Int = 0
         var saveMax : Double = 0.0
         for (i in i1-1..i2-1){
-        if (syDi[i]!! > this.s1(0,size-1))
+        if (syDi[i]!! > this.s1(0,frameSize-1))
          {
              if (syDi[i]!! > syDi[i-1]!! && syDi[i]!! > syDi[i+1]!!) {
                  saveMax = syDi[i]!!
@@ -89,23 +90,24 @@ class peak() {
         return saveMax  ;
 
     }
+
     fun localPeakFinder(i1: Int,i2: Int) : Array<Double?> {
-        var saveLocalPeak : Array<Double?> = Array(size){null}
+        var saveLocalPeak : Array<Double?> = Array(frameSize){null}
         var count : Int = 0
         for (i in i1-1..i2-1){
-           if (syDi[i]!! > syDi[i-1]!! && syDi[i]!! > syDi[i+1]!!){
+            if (syDi[i]!! > syDi[i-1]!! && syDi[i]!! > syDi[i+1]!!){
                saveLocalPeak[count] = i as Double
                count++
-           }
-}
-return saveLocalPeak
-} //로컬피크를 구할때 사용
+            }
+        }
+    return saveLocalPeak
+    } //로컬피크를 구할때 사용
 }// 실제 피크가 나오는 알고리즘
 
 
 
-class valley() {
-    var xi :Array<Double?> = Array(size){null}
+class CalValley() {
+    var xi :Array<Double?> = Array(frameSize){null}
 
     constructor( i1:Int, i2: Int,i3:Double) : this() {
 
@@ -140,9 +142,9 @@ class valley() {
     }
 
     fun valleyFinder(): Double {
-        var here : Double = this.s1(0,size-1)
+        var here : Double = this.s1(0,frameSize-1)
 
-        for (i in 0..size-1){
+        for (i in 0..frameSize-1){
             if (syDi[i]!! <= here ) {
                 if (syDi[i]!! < syDi[i - 1]!! && syDi[i]!! < syDi[i + 1]!!) {
                     standardValley = i
@@ -151,9 +153,9 @@ class valley() {
             }
         }
 
-        if(here == this.s1(0,size-1) ){
+        if(here == this.s1(0,frameSize-1) ){
             here = syDi[0]!!
-            for (i in 0..size-1){
+            for (i in 0..frameSize-1){
                 if(syDi[i]!! <= here){
                     if (syDi[i]!! < syDi[i - 1]!! && syDi[i]!! < syDi[i + 1]!!) {
                         standardValley = i
@@ -201,7 +203,7 @@ class valley() {
     } // 해당 지점에 벨리가 있는지 찾아내는 함수 */
 
     fun localVelleyFinder(i1: Int,i2: Int) : Array<Double?> {
-        var saveLocalVelley : Array<Double?> = Array(size){null}
+        val saveLocalVelley : Array<Double?> = Array(frameSize){null}
         var count : Int = 0
         for (i in i1-1..i2-1){
             if (syDi[i]!! < syDi[i-1]!! && syDi[i]!! < syDi[i+1]!!){

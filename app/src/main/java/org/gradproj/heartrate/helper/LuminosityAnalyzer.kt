@@ -4,7 +4,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import org.gradproj.heartrate.algorithm.cardioMain
+import org.gradproj.heartrate.algorithm.CardioMain
 import org.gradproj.heartrate.fragment.LumaListener
 import java.nio.ByteBuffer
 import java.util.ArrayDeque

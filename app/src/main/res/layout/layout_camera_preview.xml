@@ -8,6 +8,18 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
+    <TextView
+        android:id="@+id/tv_how_to"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="손가락을 카메라에 위에 올려주세요"
+        android:textSize="14sp"
+        android:textColor="#3b3b3b"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_start_video"
+        />
+
     <Button
         android:id="@+id/btn_start_video"
         android:layout_width="0dp"

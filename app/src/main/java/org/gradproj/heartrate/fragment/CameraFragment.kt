@@ -1,7 +1,5 @@
 package org.gradproj.heartrate.fragment
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.hardware.display.DisplayManager
@@ -20,16 +18,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
-import kotlinx.android.synthetic.main.layout_camera_preview.*
 import org.gradproj.heartrate.R
 import org.gradproj.heartrate.helper.LuminosityAnalyzer
-import org.gradproj.heartrate.helper.permissionListenHelper
 import java.lang.Math.max
 import java.lang.Math.min
-import java.nio.ByteBuffer
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.abs

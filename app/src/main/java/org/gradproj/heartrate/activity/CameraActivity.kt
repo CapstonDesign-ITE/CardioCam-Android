@@ -1,4 +1,4 @@
-package org.gradproj.heartrate
+package org.gradproj.heartrate.activity
 
 import android.Manifest
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import org.gradproj.heartrate.R
 import org.gradproj.heartrate.fragment.CameraFragment
 
 

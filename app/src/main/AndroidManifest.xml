@@ -3,7 +3,7 @@
     package="org.gradproj.heartrate">
 
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -13,15 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SignUpActivity"></activity>
-        <activity android:name=".activity.SplashActivity" />
-        <activity android:name=".activity.CameraActivity">
+        <activity android:name=".activity.MapActivity"/>
+        <activity android:name=".activity.InfoActivity" />
+        <activity android:name=".activity.SignUpActivity" />
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.CameraActivity" />
     </application>
 
 </manifest>

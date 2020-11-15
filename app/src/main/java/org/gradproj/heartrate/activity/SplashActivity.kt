@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            val intentSplash = Intent(this, CameraActivity::class.java)
+            val intentSplash = Intent(this, SignUpActivity::class.java)
             this.startActivity(intentSplash)
             overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left)
             this.finish()

@@ -6,13 +6,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CameraActivity">
+    tools:context=".activity.CameraActivity">
+
+    <TextView
+        android:id="@+id/tv_how_to"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="손가락을 카메라에 위에 올려주세요"
+        android:textSize="14sp"
+        android:textColor="#3b3b3b"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_start_video"
+        />
 
     <Button
         android:id="@+id/btn_start_video"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="44dp"
         android:text="시작"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:background="@drawable/rounded_square"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="16dp"
@@ -23,8 +38,11 @@
     <Button
         android:id="@+id/btn_stop_video"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="44dp"
         android:text="종료"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:background="@drawable/rounded_square"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="52dp"
@@ -36,9 +54,9 @@
         android:id="@+id/preview"
         android:layout_width="640px"
         android:layout_height="640px"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

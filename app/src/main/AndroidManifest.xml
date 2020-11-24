@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.gradproj.CardioCheck-In">
+    package="org.gradproj.CardioCheckIn">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,22 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="org.gradproj.heartrate.activity.SearchAddressActivity"></activity>
-        <activity android:name=".activity.MapActivity" />
-        <activity android:name=".activity.InfoActivity" />
-        <activity android:name=".activity.SignUpActivity" />
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name="org.gradproj.CardioCheckIn.activity.SearchAddressActivity"></activity>
+        <activity android:name="org.gradproj.CardioCheckIn.activity.MapActivity" />
+        <activity android:name="org.gradproj.CardioCheckIn.activity.InfoActivity" />
+        <activity android:name="org.gradproj.CardioCheckIn.activity.SignUpActivity" />
+        <activity android:name="org.gradproj.CardioCheckIn.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CameraActivity" />
+        <activity android:name="org.gradproj.CardioCheckIn.activity.CameraActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="@values/kakaoAppKey" />
+            android:value="" />
     </application>
 
 </manifest>

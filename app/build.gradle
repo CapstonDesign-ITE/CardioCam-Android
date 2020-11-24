@@ -31,6 +31,10 @@ repositories {
     maven{url "https://jitpack.io"}
 }
 
+ext{
+    retrofitVersion = "2.4.0"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -56,4 +60,8 @@ dependencies {
 
     // Butterworth library
     implementation group:'uk.me.berndporr', name:'iirj', version: '1.1'
+
+    // retrofit Library
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 }

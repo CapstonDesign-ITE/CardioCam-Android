@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/TextTheme12sp.center"
+        android:id="@+id/tv_road_address_name"
+        android:text="도로명"
+        app:layout_constraintWidth_percent="0.142"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/TextTheme12sp.center"
+        android:id="@+id/tv_road_address"
+        android:text="지번"
+        android:layout_marginTop="28dp"
+        app:layout_constraintWidth_percent="0.142"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_road_address_name" />
+
+    <TextView
+        android:id="@+id/tv_road_address_name_content"
+        style="@style/TextTheme14sp"
+        android:layout_width="0dp"
+        android:layout_marginStart="8dp"
+        android:maxLines="2"
+        android:text="경기도 성남시 분당구 대왕판교로 606번길 10 (알파리움 1단지)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_road_address_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_road_address_name"
+        app:layout_constraintWidth_percent="0.82" />
+
+    <TextView
+        android:id="@+id/tv_road_address_content"
+        style="@style/TextTheme14sp"
+        android:layout_width="0dp"
+        android:layout_marginStart="8dp"
+        android:text="경기도 성남시 분당구 백현동 531"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_road_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_road_address"
+        app:layout_constraintTop_toTopOf="@+id/tv_road_address"
+        app:layout_constraintWidth_percent="0.82" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

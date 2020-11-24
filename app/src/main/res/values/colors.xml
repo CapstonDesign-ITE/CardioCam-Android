@@ -6,4 +6,7 @@
 
     <color name="whiteBackground">#fff</color>
     <color name="colorMain">#93BEE1</color>
+    <color name="peachy_pink">#6B8C95</color>
+
+    <color name="warm_grey_two">#7d7d7d</color>
 </resources>
